@@ -1,30 +1,22 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
-import AudioPlayer from "./components/AudioPlayer";
-import VideoPlayer from "./components/VideoPlayer";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./components/screens/HomeScreen";
+import AudioPlayerScreen from "./components/screens/AudioPlayerScreen";
+import VideoPlayerScreen from "./components/screens/VideoPlayerScreen";
+
+const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.section}>
-        <VideoPlayer />
-      </View>
-      <View style={styles.section}>
-        <AudioPlayer />
-      </View>
-    </ScrollView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AudioPlayerScreen" component={AudioPlayerScreen} />
+        <Stack.Screen name="VideoPlayerScreen" component={VideoPlayerScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-  section: {
-    marginBottom: 20,
-  },
-});
 
 export default App;
