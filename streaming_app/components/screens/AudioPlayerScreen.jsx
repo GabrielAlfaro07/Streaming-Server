@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import AudioPlayer from "../players/AudioPlayer";
 import AudioHeader from "../headers/AudioHeader";
 
-const AudioPlayerScreen = () => {
+const AudioPlayerScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AudioHeader />

@@ -4,11 +4,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Welcome to our application!</Text>
       <Text style={styles.title}>What would you like to do?</Text>
       <View style={styles.optionsContainer}>
         <TouchableOpacity
           style={styles.option}
-          onPress={() => navigation.navigate("AudioPlayerScreen")}
+          onPress={() => navigation.navigate("AudioPlayerSidebar")}
         >
           <Image
             source={require("../../assets/audio-icon.png")}
@@ -18,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.option}
-          onPress={() => navigation.navigate("VideoPlayerScreen")}
+          onPress={() => navigation.navigate("VideoPlayerSidebar")}
         >
           <Image
             source={require("../../assets/video-icon.png")}

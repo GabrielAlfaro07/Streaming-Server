@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import VideoPlayer from "../players/VideoPlayer";
 import VideoHeader from "../headers/VideoHeader";
 
-const VideoPlayerScreen = () => {
+const VideoPlayerScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <VideoHeader />
