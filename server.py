@@ -1,34 +1,86 @@
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, render_template_string, url_for
+from flask_cors import CORS  # Import CORS
 import os
+import socket
 
 app = Flask(__name__)
 
-# Route to serve the HLS playlist
-@app.route('/video/<path:filename>')
-def stream_video(filename):
-    return send_from_directory('videos', filename)
+# Enable CORS for all routes
+CORS(app)  # This will enable CORS for all routes
 
-# Route to serve the HLS audio
-@app.route('/audio/<path:filename>')
-def stream_audio(filename):
-    return send_from_directory('audios', filename)
+# Directorios donde tienes tus archivos de películas y música
+MOVIES_FOLDER = "movies"
+MUSIC_FOLDER = "music"
 
-# Route to list available files
-@app.route('/videos')
-def list_videos():
-    files = os.listdir('videos')
-    return jsonify(files)
 
-@app.route('/audios')
-def list_audios():
-    files = os.listdir('audios')
-    return jsonify(files)
+@app.route('/')
+def index():
+    # Lista los archivos de películas y música en sus respectivos directorios
+    movie_files = os.listdir(MOVIES_FOLDER)
+    music_files = os.listdir(MUSIC_FOLDER)
+
+    # HTML simple para mostrar las listas de películas y música que se pueden reproducir
+    html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Media Server</title>
+    </head>
+    <body>
+        <h1>Spotflix</h1>
+
+        <h2>Movies</h2>
+        <ul>
+        {% for file in movie_files %}
+            <li>
+                <a href="{{ url_for('movies', filename=file) }}">{{ file }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <h2>Music</h2>
+        <ul>
+        {% for file in music_files %}
+            <li>
+                <a href="{{ url_for('music', filename=file) }}">{{ file }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </body>
+    </html>
+    """
+    return render_template_string(html_template, movie_files=movie_files, music_files=music_files)
+
+
+@app.route('/movies/<filename>')
+def movies(filename):
+    # Envía el archivo desde el directorio de películas
+    print(f"Serving music file: {filename}")  # Debugging line
+    return send_from_directory(MOVIES_FOLDER, filename)
+
+
+@app.route('/music/<filename>')
+def music(filename):
+    # Envía el archivo desde el directorio de música
+    print(f"Serving movie file: {filename}")  # Debugging line
+    return send_from_directory(MUSIC_FOLDER, filename)
+
+
+def obtener_ip_local():
+    # Función para obtener la dirección IP local
+    hostname = socket.gethostname()
+    return socket.gethostbyname(hostname)
+
 
 if __name__ == '__main__':
-    # Ensure the directories exist
-    if not os.path.exists('videos'):
-        os.makedirs('videos')
-    if not os.path.exists('audios'):
-        os.makedirs('audios')
+    # Configura el puerto y obtiene la IP local
+    PORT = 5000
+    ip_local = obtener_ip_local()
 
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Imprime el enlace que puedes abrir en otra computadora
+    print(f"El servidor está corriendo en: http://{ip_local}:{PORT}")
+
+    # Inicia la aplicación Flask
+    app.run(host='0.0.0.0', port=PORT)

@@ -1,5 +1,6 @@
 import React from "react";
 import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
+import AudioPlayer from "../../players/AudioPlayer";
 
 const AudioPlayerHome: React.FC = () => {
   return (
@@ -8,6 +9,9 @@ const AudioPlayerHome: React.FC = () => {
       <AudioPlayerSidebar />
       <div className="flex-grow flex justify-center items-center">
         <p className="text-lg">Audio Player Home</p>
+        <div className="flex justify-around mt-10">
+          <AudioPlayer />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import VideoPlayerSidebar from "../../sidebars/VideoPlayerSidebar";
+import VideoPlayer from "../../players/VideoPlayer";
 
 const VideoPlayerHome: React.FC = () => {
   return (
@@ -8,6 +9,9 @@ const VideoPlayerHome: React.FC = () => {
       <VideoPlayerSidebar />
       <div className="flex-grow flex justify-center items-center">
         <p className="text-lg">Video Player Home</p>
+        <div className="flex justify-around mt-10">
+          <VideoPlayer />
+        </div>
       </div>
     </div>
   );
