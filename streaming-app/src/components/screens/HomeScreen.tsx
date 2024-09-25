@@ -13,7 +13,7 @@ const HomeScreen: React.FC = () => {
       <div className="flex justify-around w-full">
         <button
           className="flex flex-col items-center p-6 bg-gray-300 rounded-lg mx-2 hover:bg-gray-400"
-          onClick={() => navigate("/audio")}
+          onClick={() => navigate("/audio/home")} // Directly navigate to audio home
         >
           <img
             src={audioIcon} // Use the imported image
@@ -24,7 +24,7 @@ const HomeScreen: React.FC = () => {
         </button>
         <button
           className="flex flex-col items-center p-6 bg-gray-300 rounded-lg mx-2 hover:bg-gray-400"
-          onClick={() => navigate("/video")}
+          onClick={() => navigate("/video/home")} // Directly navigate to video home
         >
           <img
             src={videoIcon} // Use the imported image
