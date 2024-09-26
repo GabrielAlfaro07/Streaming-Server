@@ -1,21 +1,42 @@
-from flask import Flask, send_from_directory, render_template_string, url_for
+from flask import Flask, send_from_directory, render_template_string
 import os
-import socket
+import asyncio
 
 app = Flask(__name__)
 
-# Directorios donde tienes tus archivos de películas y música
+# Estructura de películas
+movies_metadata = {
+    "video1.mp4": {"name": "The Matrix", "genre": "Science Fiction"},
+    "video2.mp4": {"name": "Inception", "genre": "Thriller"},
+}
+
+# Estructura de canciones
+music_metadata = {
+    "StayWithMe.mp3": {"name": "Stay With Me", "artist": "Miki Mitsubara", "genre": "J-pop"},
+    "LitNon.mp3": {"name": "Literally Nonsense", "artist": "Eve", "genre": "J-pop"},
+}
+
 MOVIES_FOLDER = "movies"
 MUSIC_FOLDER = "music"
 
-
 @app.route('/')
-def index():
-    # Lista los archivos de películas y música en sus respectivos directorios
-    movie_files = os.listdir(MOVIES_FOLDER)
-    music_files = os.listdir(MUSIC_FOLDER)
+async def index():
+    # Verifica si las carpetas existen
+    if not os.path.exists(MOVIES_FOLDER):
+        return "<h1>Error: 'movies' folder does not exist.</h1>", 404
 
-    # HTML simple para mostrar las listas de películas y música que se pueden reproducir
+    if not os.path.exists(MUSIC_FOLDER):
+        return "<h1>Error: 'music' folder does not exist.</h1>", 404
+
+    # Lista los archivos de películas y música de forma asíncrona
+    movie_files = await asyncio.to_thread(os.listdir, MOVIES_FOLDER)
+    music_files = await asyncio.to_thread(os.listdir, MUSIC_FOLDER)
+
+    # Filtra archivos existentes en el diccionario de metadatos
+    movie_files = [file for file in movie_files if file in movies_metadata]
+    music_files = [file for file in music_files if file in music_metadata]
+
+    # HTML simple para mostrar las listas de películas y música con su información
     html_template = """
     <!DOCTYPE html>
     <html lang="en">
@@ -31,7 +52,9 @@ def index():
         <ul>
         {% for file in movie_files %}
             <li>
-                <a href="{{ url_for('movies', filename=file) }}">{{ file }}</a>
+                <strong>{{ movies_metadata[file].name }}</strong> 
+                ({{ movies_metadata[file].genre }})
+                <a href="{{ url_for('movies', filename=file) }}">Watch</a>
             </li>
         {% endfor %}
         </ul>
@@ -40,41 +63,27 @@ def index():
         <ul>
         {% for file in music_files %}
             <li>
-                <a href="{{ url_for('music', filename=file) }}">{{ file }}</a>
+                <strong>{{ music_metadata[file].name }}</strong> 
+                by {{ music_metadata[file].artist }} 
+                ({{ music_metadata[file].genre }})
+                <a href="{{ url_for('music', filename=file) }}">Listen</a>
             </li>
         {% endfor %}
         </ul>
     </body>
     </html>
     """
-    return render_template_string(html_template, movie_files=movie_files, music_files=music_files)
-
+    return render_template_string(html_template, movie_files=movie_files, music_files=music_files, movies_metadata=movies_metadata, music_metadata=music_metadata)
 
 @app.route('/movies/<filename>')
-def movies(filename):
-    # Envía el archivo desde el directorio de películas
-    return send_from_directory(MOVIES_FOLDER, filename)
-
+async def movies(filename):
+    # Enviar archivos de películas de manera asíncrona
+    return await asyncio.to_thread(send_from_directory, MOVIES_FOLDER, filename)
 
 @app.route('/music/<filename>')
-def music(filename):
-    # Envía el archivo desde el directorio de música
-    return send_from_directory(MUSIC_FOLDER, filename)
-
-
-def obtener_ip_local():
-    # Función para obtener la dirección IP local
-    hostname = socket.gethostname()
-    return socket.gethostbyname(hostname)
-
+async def music(filename):
+    # Enviar archivos de música de manera asíncrona
+    return await asyncio.to_thread(send_from_directory, MUSIC_FOLDER, filename)
 
 if __name__ == '__main__':
-    # Configura el puerto y obtiene la IP local
-    PORT = 5000
-    ip_local = obtener_ip_local()
-
-    # Imprime el enlace que puedes abrir en otra computadora
-    print(f"El servidor está corriendo en: http://{ip_local}:{PORT}")
-
-    # Inicia la aplicación Flask
-    app.run(host='0.0.0.0', port=PORT)
+    app.run(host='0.0.0.0', port=5000)
