@@ -11,16 +11,12 @@ const AudioPlayer: React.FC = () => {
 
   useEffect(() => {
     // Fetch the list of music files from the Flask server
-    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/`)
-      .then((response) => response.text())
+    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/music`)
+      .then((response) => response.json())
       .then((data) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, "text/html");
-        const musicLinks = Array.from(
-          doc.querySelectorAll('a[href*="/music/"]')
-        ).map((link) => ({
-          name: link.textContent || "Unknown Track",
-          url: (link as HTMLAnchorElement).href,
+        const musicLinks = data.music.map((file: string) => ({
+          name: file,
+          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/music/${file}`,
         }));
         setTracks(musicLinks);
       });

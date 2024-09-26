@@ -10,17 +10,13 @@ const VideoPlayer: React.FC = () => {
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch the list of movie files from the Flask server
-    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/`)
-      .then((response) => response.text())
+    // Fetch the list of video files from the Flask server
+    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/movies`)
+      .then((response) => response.json())
       .then((data) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, "text/html");
-        const videoLinks = Array.from(
-          doc.querySelectorAll('a[href*="/movies/"]')
-        ).map((link) => ({
-          name: link.textContent || "Unknown Video",
-          url: (link as HTMLAnchorElement).href,
+        const videoLinks = data.movies.map((file: string) => ({
+          name: file,
+          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/movies/${file}`,
         }));
         setVideos(videoLinks);
       });
