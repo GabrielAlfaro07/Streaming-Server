@@ -1,49 +1,36 @@
-import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
-import SidebarButton from "../buttons/SidebarButton";
-import HomeButton from "../buttons/HomeButton"; // Import HomeButton
+import React from "react";
+import { Link } from "react-router-dom";
+import HomeButton from "../buttons/HomeButton";
 
-const AudioPlayerSidebar: React.FC = () => {
-  const [open, setOpen] = useState(false);
+interface AudioPlayerSidebarProps {
+  isOpen: boolean;
+}
 
+const AudioPlayerSidebar: React.FC<AudioPlayerSidebarProps> = ({ isOpen }) => {
   return (
-    <div className="flex">
-      {/* Button to toggle the sidebar when closed */}
-      {!open && <SidebarButton onClick={() => setOpen(true)} isOpen={open} />}
-
-      <div
-        className={`${
-          open ? "w-60" : "w-0"
-        } fixed h-full bg-gray-800 transition-all duration-300 ease-in-out overflow-hidden flex flex-col`}
-      >
-        {/* Button to close the sidebar when open */}
-        {open && (
-          <div className="absolute">
-            <SidebarButton onClick={() => setOpen(false)} isOpen={open} />
-          </div>
-        )}
-
-        <ul className="mt-20 mx-4 text-white flex-grow">
-          <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
-            <Link to="/audio/home">Home</Link>
-          </li>
-          <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
-            <Link to="/audio/genres">Genres</Link>
-          </li>
-          <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
-            <Link to="/audio/trends">Trends</Link>
-          </li>
-          <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
-            <Link to="/audio/search">Search</Link>
-          </li>
-        </ul>
-        <HomeButton />
-      </div>
-
-      {/* Main content */}
-      <div className="flex-grow p-4">
-        <Outlet />
-      </div>
+    <div
+      className={`fixed top-16 h-[calc(100vh-4rem)] bg-gray-800 transition-all duration-300 ease-in-out transform ${
+        isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+      } flex flex-col w-60`}
+      style={{
+        visibility: isOpen ? "visible" : "hidden", // Hide it when closed
+      }}
+    >
+      <ul className="mt-10 mx-4 text-white flex-grow">
+        <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
+          <Link to="/audio/home">Home</Link>
+        </li>
+        <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
+          <Link to="/audio/languages">Languages</Link>
+        </li>
+        <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
+          <Link to="/audio/trends">Trends</Link>
+        </li>
+        <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
+          <Link to="/audio/search">Search</Link>
+        </li>
+      </ul>
+      <HomeButton />
     </div>
   );
 };

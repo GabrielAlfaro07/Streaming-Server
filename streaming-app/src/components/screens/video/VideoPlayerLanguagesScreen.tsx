@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
+import VideoPlayerSidebar from "../../sidebars/VideoPlayerSidebar";
 import Header from "../../headers/Header"; // Import the Header component
 
-const AudioPlayerSearch: React.FC = () => {
+const VideoPlayerTrends: React.FC = () => {
   // Manage sidebar open/close state
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -14,22 +14,22 @@ const AudioPlayerSearch: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar will handle its own open/close logic */}
-      <AudioPlayerSidebar isOpen={isSidebarOpen} />
+      <VideoPlayerSidebar isOpen={isSidebarOpen} />
 
       <div className="flex-grow flex flex-col w-full">
         {/* Header component at the top of the screen */}
         <Header
-          title="Search"
+          title="Languages"
           isOpen={isSidebarOpen}
           onToggleSidebar={toggleSidebar}
         />
 
         {/* Main content */}
         <div className="flex justify-center items-center flex-grow">
-          <p className="text-lg">Audio Player Search</p>
+          <p className="text-lg">Video Player Languages</p>
         </div>
       </div>
     </div>
   );
 };
-export default AudioPlayerSearch;
+export default VideoPlayerTrends;
