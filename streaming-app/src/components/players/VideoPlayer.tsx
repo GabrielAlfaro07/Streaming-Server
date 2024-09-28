@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 interface Video {
   name: string;
+  genre: string;
   url: string;
 }
 
@@ -14,9 +15,10 @@ const VideoPlayer: React.FC = () => {
     fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/movies`)
       .then((response) => response.json())
       .then((data) => {
-        const videoLinks = data.movies.map((file: string) => ({
-          name: file,
-          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/movies/${file}`,
+        const videoLinks = data.movies.map((file: any) => ({
+          name: file.name,
+          genre: file.genre,
+          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/movies/${file.file}`,
         }));
         setVideos(videoLinks);
       });
@@ -36,7 +38,7 @@ const VideoPlayer: React.FC = () => {
             className="flex justify-between items-center p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
             onClick={() => playVideo(video.url)}
           >
-            {video.name}
+            {video.name} ({video.genre})
           </li>
         ))}
       </ul>

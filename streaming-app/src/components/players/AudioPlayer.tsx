@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 interface Track {
   name: string;
+  artist: string;
+  genre: string;
   url: string;
 }
 
@@ -14,9 +16,11 @@ const AudioPlayer: React.FC = () => {
     fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/music`)
       .then((response) => response.json())
       .then((data) => {
-        const musicLinks = data.music.map((file: string) => ({
-          name: file,
-          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/music/${file}`,
+        const musicLinks = data.music.map((file: any) => ({
+          name: file.name,
+          artist: file.artist,
+          genre: file.genre,
+          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/music/${file.file}`,
         }));
         setTracks(musicLinks);
       });
@@ -36,7 +40,7 @@ const AudioPlayer: React.FC = () => {
             className="flex justify-between items-center p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
             onClick={() => playTrack(track.url)}
           >
-            {track.name}
+            {track.name} by {track.artist} ({track.genre})
           </li>
         ))}
       </ul>
