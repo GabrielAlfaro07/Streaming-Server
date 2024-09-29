@@ -10,13 +10,13 @@ CORS(app)
 
 # Metadata for movies and music
 movies_metadata = {
-    "video1.mp4": {"name": "The Matrix", "genre": "Science Fiction"},
-    "video2.mp4": {"name": "Inception", "genre": "Thriller"},
+    "Coldplay - Viva La Vida (Official Video).mp4": {"name": "The Matrix", "genre": "Science Fiction"},
+#    "video2.mp4": {"name": "Inception", "genre": "Thriller"},
 }
 
 music_metadata = {
-    "StayWithMe.mp3": {"name": "Stay With Me", "artist": "Miki Mitsubara", "genre": "J-pop"},
-    "LitNon.mp3": {"name": "Literally Nonsense", "artist": "Eve", "genre": "J-pop"},
+    "Deemo - Sakuzyo - Altale.mp3": {"name": "Stay With Me", "artist": "Miki Mitsubara", "genre": "J-pop"},
+#    "LitNon.mp3": {"name": "Literally Nonsense", "artist": "Eve", "genre": "J-pop"},
 }
 
 MOVIES_FOLDER = "movies"

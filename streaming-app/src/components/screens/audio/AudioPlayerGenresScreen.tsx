@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
-import AudioPlayer from "../../players/AudioPlayer";
 import Header from "../../headers/Header"; // Import the Header component
 
 const AudioPlayerGenres: React.FC = () => {
@@ -28,9 +27,6 @@ const AudioPlayerGenres: React.FC = () => {
         {/* Main content */}
         <div className="flex justify-center items-center flex-grow">
           <p className="text-lg">Audio Player Genres</p>
-          <div className="flex justify-around mt-10">
-            <AudioPlayer />
-          </div>
         </div>
       </div>
     </div>
