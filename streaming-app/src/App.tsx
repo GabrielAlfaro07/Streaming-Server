@@ -9,6 +9,7 @@ import VideoPlayerHome from "./components/screens/video/VideoPlayerHomeScreen";
 import VideoPlayerGenres from "./components/screens/video/VideoPlayerGenresScreen";
 import VideoPlayerLanguages from "./components/screens/video/VideoPlayerLanguagesScreen";
 import VideoPlayerSearch from "./components/screens/video/VideoPlayerSearchScreen";
+import VideoPlayerScreen from "./components/screens/video/VideoPlayerScreen";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,9 @@ const App: React.FC = () => {
         <Route path="/video/genres" element={<VideoPlayerGenres />} />
         <Route path="/video/languages" element={<VideoPlayerLanguages />} />
         <Route path="/video/search" element={<VideoPlayerSearch />} />
+
+        {/* Route for VideoPlayerScreen */}
+        <Route path="/video/player" element={<VideoPlayerScreen />} />
       </Routes>
     </Router>
   );

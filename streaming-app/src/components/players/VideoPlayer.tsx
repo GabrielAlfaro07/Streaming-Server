@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Video {
   name: string;
@@ -8,10 +9,9 @@ interface Video {
 
 const VideoPlayer: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
-  const [currentVideo, setCurrentVideo] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the list of video files from the Flask server
     fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/movies`)
       .then((response) => response.json())
       .then((data) => {
@@ -24,8 +24,9 @@ const VideoPlayer: React.FC = () => {
       });
   }, []);
 
-  const playVideo = (url: string) => {
-    setCurrentVideo(url);
+  const handleVideoSelect = (video: Video) => {
+    // Navigate to /video/player without adding the video name to the route
+    navigate("/video/player", { state: { selectedVideo: video } });
   };
 
   return (
@@ -36,18 +37,12 @@ const VideoPlayer: React.FC = () => {
           <li
             key={index}
             className="flex justify-between items-center p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
-            onClick={() => playVideo(video.url)}
+            onClick={() => handleVideoSelect(video)}
           >
             {video.name} ({video.genre})
           </li>
         ))}
       </ul>
-      {currentVideo && (
-        <video controls className="mt-4 w-full max-w-md">
-          <source src={currentVideo} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      )}
     </div>
   );
 };
