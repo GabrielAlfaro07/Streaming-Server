@@ -11,7 +11,7 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({ onClick, isOpen }) => {
   return (
     <button
       onClick={onClick}
-      className={`absolute top-2 left-2 bg-gray-800 transition duration-300 ease-in-out rounded-full p-4 text-lg ${
+      className={`absolute top-2 left-2 bg-gray-800 transition duration-300 ease-in-out rounded-full p-2 m-2 text-lg ${
         isOpen
           ? "text-white hover:bg-gray-600"
           : "hover:bg-gray-600 hover:text-white"

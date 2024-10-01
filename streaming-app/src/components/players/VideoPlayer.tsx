@@ -31,7 +31,6 @@ const VideoPlayer: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4">Video Player</h1>
       <ul className="w-full max-w-md bg-white rounded-lg shadow-lg p-4">
         {videos.map((video, index) => (
           <li

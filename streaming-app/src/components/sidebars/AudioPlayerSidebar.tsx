@@ -11,7 +11,7 @@ const AudioPlayerSidebar: React.FC<AudioPlayerSidebarProps> = ({ isOpen }) => {
     <div
       className={`fixed top-16 h-[calc(100vh-4rem)] bg-gray-800 transition-all duration-300 ease-in-out transform ${
         isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-      } flex flex-col w-60`}
+      } flex flex-col w-60 z-50`}
       style={{
         visibility: isOpen ? "visible" : "hidden", // Hide it when closed
       }}

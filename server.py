@@ -10,12 +10,12 @@ CORS(app)
 
 # Metadata for movies and music
 movies_metadata = {
-    "Coldplay - Viva La Vida (Official Video).mp4": {"name": "Coldplay - Viva La Vida (Official Video)", "genre": "Science Fiction"},
+    "Coldplay - Viva La Vida (Official Video).mp4": {"name": "Coldplay - Viva La Vida (Official Video)", "genre": "Music"},
 #    "video2.mp4": {"name": "Inception", "genre": "Thriller"},
 }
 
 music_metadata = {
-    "Deemo - Sakuzyo - Altale.mp3": {"name": "Deemo - Sakuzyo - Altale", "artist": "Miki Mitsubara", "genre": "J-pop"},
+    "Deemo - Sakuzyo - Altale.mp3": {"name": "Altale - Deemo", "artist": "Sakuzyo", "genre": "Electronic"},
 #    "LitNon.mp3": {"name": "Literally Nonsense", "artist": "Eve", "genre": "J-pop"},
 }
 

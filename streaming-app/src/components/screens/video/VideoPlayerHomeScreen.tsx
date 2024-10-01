@@ -26,10 +26,16 @@ const VideoPlayerHome: React.FC = () => {
         />
 
         {/* Main content */}
-        <div className="flex justify-center items-center flex-grow">
-          <p className="text-lg">Video Player Home</p>
-          <div className="flex justify-around mt-10">
-            <VideoPlayer />
+        <div className="flex justify-center flex-grow">
+          {/* Main content container with space on both sides */}
+          <div className="w-full lg:w-1/2 flex flex-col items-start p-4">
+            {/* Title */}
+            <h2 className="text-3xl font-bold my-4">Movie Collection</h2>
+
+            {/* Video player section */}
+            <div className="w-full">
+              <VideoPlayer />
+            </div>
           </div>
         </div>
       </div>
