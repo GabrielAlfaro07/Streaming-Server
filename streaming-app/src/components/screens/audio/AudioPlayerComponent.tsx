@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import backwardIcon from "../../../assets/backward.png";
+import forwardIcon from "../../../assets/forward.png";
 
 interface Track {
   name: string;
@@ -9,19 +11,26 @@ interface Track {
   url: string;
 }
 
-const AudioPlayerComponent: React.FC<{ selectedTrack: Track | null }> = ({
+interface AudioPlayerComponentProps {
+  selectedTrack: Track | null;
+  onClosePlayer: () => void; // Prop to close the player
+}
+
+const AudioPlayerComponent: React.FC<AudioPlayerComponentProps> = ({
   selectedTrack,
+  onClosePlayer, // Add close function
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (selectedTrack) {
+    if (selectedTrack && audioRef.current) {
       setIsPlaying(true);
-      if (audioRef.current) {
-        audioRef.current.play();
-      }
+      audioRef.current.play();
+      setDuration(audioRef.current.duration);
     }
   }, [selectedTrack]);
 
@@ -38,68 +47,89 @@ const AudioPlayerComponent: React.FC<{ selectedTrack: Track | null }> = ({
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
       const currentProgress =
         (audioRef.current.currentTime / audioRef.current.duration) * 100;
       setProgress(currentProgress);
     }
   };
 
-  // Function to handle seeking
   const handleSeek = (event: React.MouseEvent<HTMLDivElement>) => {
     if (audioRef.current) {
-      const target = event.currentTarget; // Get the current target
-      const rect = target.getBoundingClientRect(); // Get the bounding rectangle
-      const clickX = event.clientX - rect.left; // Calculate click position relative to the progress bar
-      const newTime = (clickX / rect.width) * audioRef.current.duration; // Calculate new time based on click position
-      audioRef.current.currentTime = newTime; // Set the audio current time to the new time
-      setProgress((clickX / rect.width) * 100); // Update the progress state
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const newTime = (clickX / rect.width) * audioRef.current.duration;
+      audioRef.current.currentTime = newTime;
+      setProgress((clickX / rect.width) * 100);
     }
   };
 
-  // Function to seek forward 10 seconds
   const handleForward = () => {
     if (audioRef.current) {
       audioRef.current.currentTime += 10;
     }
   };
 
-  // Function to seek backward 10 seconds
   const handleBackward = () => {
     if (audioRef.current) {
       audioRef.current.currentTime -= 10;
     }
   };
 
+  const handleClose = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    onClosePlayer(); // Call the close function from parent
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   if (!selectedTrack) return null;
 
   return (
     <div
-      className={`fixed bottom-0 w-full bg-gray-800 text-white p-4 transition-transform duration-500 ${
-        selectedTrack ? "translate-y-0" : "translate-y-full"
-      }`}
+      className="fixed bottom-0 w-full bg-gray-800 text-white p-4 transition-transform duration-500 z-50"
+      style={{ zIndex: 999 }}
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-bold">{selectedTrack.name}</h2>
-          <p className="text-sm">{selectedTrack.artist}</p>
-        </div>
+      {/* Close Button */}
+      <button
+        onClick={handleClose}
+        className="absolute top-2 right-4 text-white text-2xl"
+      >
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
+
+      {/* Top Row: Control Buttons */}
+      <div className="flex justify-center items-center space-x-6 mb-4">
+        <button onClick={handleBackward}>
+          <img src={backwardIcon} alt="Backward 10s" className="h-8" />
+        </button>
         <button onClick={handlePlayPause}>
           <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size="2x" />
         </button>
+        <button onClick={handleForward}>
+          <img src={forwardIcon} alt="Forward 10s" className="h-8" />
+        </button>
       </div>
 
-      <audio
-        ref={audioRef}
-        src={selectedTrack.url}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setIsPlaying(false)}
-        className="hidden"
-      />
+      {/* Second Row: Song Title */}
+      <div className="text-center text-lg font-bold mb-2">
+        {selectedTrack.name}
+      </div>
 
-      {/* Progress bar with seek functionality */}
+      {/* Third Row: Artist */}
+      <div className="text-center text-sm mb-2">{selectedTrack.artist}</div>
+
+      {/* Fourth Row: Progress Bar */}
       <div
-        className="w-full bg-gray-600 h-2 rounded mt-2 cursor-pointer"
-        onClick={handleSeek} // Attach the click handler
+        className="w-full bg-gray-600 h-2 rounded mb-2 cursor-pointer"
+        onClick={handleSeek}
       >
         <div
           className="bg-green-500 h-full rounded"
@@ -107,21 +137,19 @@ const AudioPlayerComponent: React.FC<{ selectedTrack: Track | null }> = ({
         />
       </div>
 
-      {/* Control Buttons for seeking */}
-      <div className="flex space-x-4 mt-2">
-        <button
-          onClick={handleBackward}
-          className="bg-transparent text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-gray-500"
-        >
-          -10s
-        </button>
-        <button
-          onClick={handleForward}
-          className="bg-transparent text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-gray-500"
-        >
-          +10s
-        </button>
+      {/* Fifth Row: Time Progress */}
+      <div className="text-center text-xs">
+        {formatTime(currentTime)} / {formatTime(duration)}
       </div>
+
+      <audio
+        ref={audioRef}
+        src={selectedTrack.url}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+        onEnded={handleClose}
+        className="hidden"
+      />
     </div>
   );
 };

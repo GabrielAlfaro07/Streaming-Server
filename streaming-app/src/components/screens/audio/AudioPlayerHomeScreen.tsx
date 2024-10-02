@@ -23,6 +23,10 @@ const AudioPlayerHome: React.FC = () => {
     setSelectedTrack(track);
   };
 
+  const handleClosePlayer = () => {
+    setSelectedTrack(null); // Close the audio player
+  };
+
   return (
     <div className="flex h-screen relative">
       <AudioPlayerSidebar isOpen={isSidebarOpen} />
@@ -47,7 +51,10 @@ const AudioPlayerHome: React.FC = () => {
         <div className="pb-24"></div>
 
         {/* AudioPlayerComponent will be placed fixed at the bottom */}
-        <AudioPlayerComponent selectedTrack={selectedTrack} />
+        <AudioPlayerComponent
+          selectedTrack={selectedTrack}
+          onClosePlayer={handleClosePlayer}
+        />
       </div>
     </div>
   );
