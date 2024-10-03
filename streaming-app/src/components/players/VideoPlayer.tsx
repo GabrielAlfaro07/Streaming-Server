@@ -1,34 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Video } from "../../services/mediaService";
 
-interface Video {
-  name: string;
-  genre: string;
-  url: string;
+interface VideoPlayerProps {
+  onVideoSelect: (video: Video) => void;
+  videos: Video[]; // Receive videos as a prop
 }
 
-const VideoPlayer: React.FC = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/movies`)
-      .then((response) => response.json())
-      .then((data) => {
-        const videoLinks = data.movies.map((file: any) => ({
-          name: file.name,
-          genre: file.genre,
-          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/movies/${file.file}`,
-        }));
-        setVideos(videoLinks);
-      });
-  }, []);
-
-  const handleVideoSelect = (video: Video) => {
-    // Navigate to /video/player without adding the video name to the route
-    navigate("/video/player", { state: { selectedVideo: video } });
-  };
-
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ onVideoSelect, videos }) => {
   return (
     <div className="flex flex-col items-center">
       <ul className="w-full max-w-md bg-white rounded-lg shadow-lg p-4">
@@ -36,9 +14,10 @@ const VideoPlayer: React.FC = () => {
           <li
             key={index}
             className="flex justify-between items-center p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
-            onClick={() => handleVideoSelect(video)}
+            onClick={() => onVideoSelect(video)} // Send selected video to parent
           >
-            {video.name} ({video.genre})
+            <span>{video.name}</span>
+            <span className="text-sm text-gray-500">({video.genre})</span>
           </li>
         ))}
       </ul>

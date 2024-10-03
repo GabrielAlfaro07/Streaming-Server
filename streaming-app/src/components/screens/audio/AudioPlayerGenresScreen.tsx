@@ -1,33 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
-import Header from "../../headers/Header"; // Import the Header component
+import Header from "../../headers/Header";
+import AudioPlayerComponent from "./AudioPlayerComponent";
+import AudioPlayer from "../../players/AudioPlayer"; // Import AudioPlayer component
+import {
+  fetchTracks,
+  Track,
+  getGenresFromTracks,
+} from "../../../services/mediaService";
 
 const AudioPlayerGenres: React.FC = () => {
-  // Manage sidebar open/close state
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
 
-  // Function to toggle sidebar
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const handleTrackSelect = (track: Track) => {
+    setSelectedTrack(track);
+  };
+
+  const handleClosePlayer = () => {
+    setSelectedTrack(null);
+  };
+
+  // Fetch tracks when the component mounts
+  useEffect(() => {
+    const loadTracks = async () => {
+      const fetchedTracks = await fetchTracks();
+      setTracks(fetchedTracks);
+      setGenres(getGenresFromTracks(fetchedTracks)); // Extract unique genres
+    };
+    loadTracks();
+  }, []);
+
   return (
     <div className="flex h-screen">
-      {/* Sidebar will handle its own open/close logic */}
       <AudioPlayerSidebar isOpen={isSidebarOpen} />
 
       <div className="flex-grow flex flex-col w-full">
-        {/* Header component at the top of the screen */}
         <Header
           title="Genres"
           isOpen={isSidebarOpen}
           onToggleSidebar={toggleSidebar}
         />
 
-        {/* Main content */}
-        <div className="flex justify-center items-center flex-grow">
-          <p className="text-lg">Audio Player Genres</p>
+        <div className="flex justify-center flex-grow p-4">
+          <div className="w-full lg:w-1/2 flex flex-col items-start">
+            <h2 className="text-3xl font-bold my-4">Music Genres</h2>
+
+            {/* Render each genre and use AudioPlayer to display the tracks */}
+            {genres.map((genre) => (
+              <div key={genre} className="mb-4 w-full">
+                <h3 className="text-2xl font-semibold">{genre}</h3>
+
+                {/* Use the AudioPlayer component to display the tracks */}
+                <AudioPlayer
+                  tracks={tracks.filter((track) => track.genre === genre)}
+                  onTrackSelect={handleTrackSelect}
+                />
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* AudioPlayerComponent will be placed fixed at the bottom */}
+        {selectedTrack && (
+          <AudioPlayerComponent
+            selectedTrack={selectedTrack}
+            onClosePlayer={handleClosePlayer}
+          />
+        )}
       </div>
     </div>
   );

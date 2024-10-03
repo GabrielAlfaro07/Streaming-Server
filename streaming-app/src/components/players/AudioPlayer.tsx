@@ -1,34 +1,12 @@
-import React, { useState, useEffect } from "react";
-
-interface Track {
-  name: string;
-  artist: string;
-  genre: string;
-  url: string;
-}
+import React from "react";
+import { Track } from "../../services/mediaService";
 
 interface AudioPlayerProps {
+  tracks: Track[];
   onTrackSelect: (track: Track) => void;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ onTrackSelect }) => {
-  const [tracks, setTracks] = useState<Track[]>([]);
-
-  useEffect(() => {
-    // Fetch the list of music files from the Flask server
-    fetch(`${import.meta.env.VITE_FLASK_SERVER_IP}/music`)
-      .then((response) => response.json())
-      .then((data) => {
-        const musicLinks = data.music.map((file: any) => ({
-          name: file.name,
-          artist: file.artist,
-          genre: file.genre,
-          url: `${import.meta.env.VITE_FLASK_SERVER_IP}/music/${file.file}`,
-        }));
-        setTracks(musicLinks);
-      });
-  }, []);
-
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ tracks, onTrackSelect }) => {
   return (
     <div className="flex flex-col items-center">
       <ul className="w-full max-w-md bg-white rounded-lg shadow-lg p-4">
@@ -36,9 +14,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onTrackSelect }) => {
           <li
             key={index}
             className="flex justify-between items-center p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
-            onClick={() => onTrackSelect(track)} // Send selected track to parent
+            onClick={() => onTrackSelect(track)}
           >
-            {track.name} by {track.artist} ({track.genre})
+            <span>{track.name}</span>
+            <span className="text-sm text-gray-500">({track.genre})</span>
           </li>
         ))}
       </ul>
