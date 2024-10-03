@@ -24,7 +24,7 @@ const AudioPlayerSidebar: React.FC<AudioPlayerSidebarProps> = ({ isOpen }) => {
           <Link to="/audio/genres">Genres</Link>
         </li>
         <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
-          <Link to="/audio/languages">Languages</Link>
+          <Link to="/audio/favorites">Favorites</Link>
         </li>
         <li className="p-4 transition duration-300 ease-in-out hover:bg-gray-700 rounded-full">
           <Link to="/audio/search">Search</Link>

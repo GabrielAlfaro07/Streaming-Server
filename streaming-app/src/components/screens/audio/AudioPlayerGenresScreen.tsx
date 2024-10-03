@@ -38,7 +38,7 @@ const AudioPlayerGenres: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg">
       <AudioPlayerSidebar isOpen={isSidebarOpen} />
 
       <div className="flex-grow flex flex-col w-full">

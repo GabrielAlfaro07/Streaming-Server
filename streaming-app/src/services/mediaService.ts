@@ -1,4 +1,5 @@
 export interface Track {
+  id: string;
   name: string;
   artist: string;
   genre: string;
@@ -6,6 +7,7 @@ export interface Track {
 }
 
 export interface Video {
+  id: string;
   name: string;
   genre: string;
   url: string;
@@ -17,6 +19,7 @@ export const fetchTracks = async (): Promise<Track[]> => {
   const data = await response.json();
 
   return data.music.map((file: any) => ({
+    id: file.id,
     name: file.name,
     artist: file.artist,
     genre: file.genre,
@@ -37,6 +40,7 @@ export const fetchVideos = async (): Promise<Video[]> => {
   );
   const data = await response.json();
   return data.movies.map((file: any) => ({
+    id: file.id,
     name: file.name,
     genre: file.genre,
     url: `${import.meta.env.VITE_FLASK_SERVER_IP}/movies/${file.file}`,

@@ -1,4 +1,5 @@
 import React from "react";
+import FavoriteButton from "../buttons/FavoriteButton"; // Import the FavoriteButton component
 import { Track } from "../../services/mediaService";
 
 interface AudioPlayerProps {
@@ -18,6 +19,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ tracks, onTrackSelect }) => {
           >
             <span>{track.name}</span>
             <span className="text-sm text-gray-500">({track.genre})</span>
+            <FavoriteButton
+              itemId={track.id}
+              itemType="music"
+              itemDetails={track}
+            />
           </li>
         ))}
       </ul>

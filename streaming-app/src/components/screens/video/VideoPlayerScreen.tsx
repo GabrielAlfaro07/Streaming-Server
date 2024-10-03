@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import backwardIcon from "../../../assets/backward.png";
+import forwardIcon from "../../../assets/forward.png";
 
 const VideoPlayerScreen: React.FC = () => {
   const location = useLocation();
@@ -79,17 +81,11 @@ const VideoPlayerScreen: React.FC = () => {
 
           {/* Seek Control Buttons */}
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
-            <button
-              onClick={handleBackward}
-              className="bg-transparent text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-gray-800"
-            >
-              -10s
+            <button onClick={handleBackward}>
+              <img src={backwardIcon} alt="Backward 10s" className="h-8" />
             </button>
-            <button
-              onClick={handleForward}
-              className="bg-transparent text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-gray-800"
-            >
-              +10s
+            <button onClick={handleForward}>
+              <img src={forwardIcon} alt="Backward 10s" className="h-8" />
             </button>
           </div>
         </>
