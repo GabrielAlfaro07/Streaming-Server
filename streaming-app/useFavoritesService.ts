@@ -1,12 +1,5 @@
 import { db } from "./firebaseConfig";
-import {
-  collection,
-  doc,
-  setDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, query } from "firebase/firestore";
 
 export const addFavorite = async (
   userId: string,

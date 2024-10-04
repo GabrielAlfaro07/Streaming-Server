@@ -5,6 +5,7 @@ import backwardIcon from "../../../assets/backward.png";
 import forwardIcon from "../../../assets/forward.png";
 
 interface Track {
+  id: string;
   name: string;
   artist: string;
   genre: string;
