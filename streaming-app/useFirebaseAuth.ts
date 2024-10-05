@@ -9,13 +9,46 @@ import {
 import { auth, db } from "./firebaseConfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-// Create the Firestore favorites structure when the user logs in
+// Initialize Firestore structure for user favorites with "init" documents
 const initializeUserFavorites = async (userId: string) => {
-  const userFavoritesRef = doc(db, "users", userId);
+  const userFavoritesRef = doc(
+    db,
+    "users",
+    userId,
+    "favorites",
+    "favoritesDocument"
+  );
   const docSnapshot = await getDoc(userFavoritesRef);
+
   if (!docSnapshot.exists()) {
+    // Create "favorites" document under the "favorites" collection
     await setDoc(userFavoritesRef, { initialized: true });
-    console.log("User Firestore structure initialized.");
+
+    // Now create "music" and "movies" collections under "favoritesDocument"
+    const musicRef = doc(
+      db,
+      "users",
+      userId,
+      "favorites",
+      "favoritesDocument",
+      "music",
+      "init"
+    );
+    const moviesRef = doc(
+      db,
+      "users",
+      userId,
+      "favorites",
+      "favoritesDocument",
+      "movies",
+      "init"
+    );
+
+    // Create "init" documents in both subcollections
+    await setDoc(musicRef, { initialized: true });
+    await setDoc(moviesRef, { initialized: true });
+
+    console.log("User structure initialized with favorites (music, movies).");
   }
 };
 
@@ -28,7 +61,6 @@ export const useFirebaseAuth = () => {
       setUser(user);
       setLoading(false);
 
-      // Initialize the Firestore structure for the user upon login
       if (user) {
         await initializeUserFavorites(user.uid);
       }
@@ -41,7 +73,6 @@ export const useFirebaseAuth = () => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Initialize the Firestore structure when the user logs in
     await initializeUserFavorites(user.uid);
   };
 

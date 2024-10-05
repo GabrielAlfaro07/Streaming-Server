@@ -3,13 +3,13 @@ import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
 import AudioPlayerComponent from "./AudioPlayerComponent";
 import AudioPlayer from "../../players/AudioPlayer";
 import Header from "../../headers/Header";
-import { Track } from "../../../services/mediaService";
+import { Track, fetchTracks } from "../../../services/mediaService"; // Import fetchTracks
 import { getFavorites } from "../../../../useFavoritesService";
 import { useFirebaseAuth } from "../../../../useFirebaseAuth";
 
 const AudioPlayerFavorites: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [favoriteTracks, setFavoriteTracks] = useState<Track[]>([]);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
   const { user } = useFirebaseAuth();
 
@@ -27,11 +27,16 @@ const AudioPlayerFavorites: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const fetchFavorites = async () => {
-        const favorites = await getFavorites(user.uid, "music");
-        setTracks(favorites);
+      const fetchFavoritesAndTracks = async () => {
+        const favorites = await getFavorites(user.uid, "music"); // Get favorite IDs
+        const allTracks = await fetchTracks(); // Fetch all tracks from the server
+        // Filter tracks by favorite IDs
+        const matchingTracks = allTracks.filter((track) =>
+          favorites.some((fav) => fav.id === track.id)
+        );
+        setFavoriteTracks(matchingTracks); // Set favorite tracks
       };
-      fetchFavorites();
+      fetchFavoritesAndTracks();
     }
   }, [user]);
 
@@ -49,29 +54,31 @@ const AudioPlayerFavorites: React.FC = () => {
         <div className="flex justify-center flex-grow">
           <div className="w-full lg:w-1/2 flex flex-col items-start p-4">
             <h2 className="text-3xl font-bold my-4">Your Favorite Tracks</h2>
-            {user ? (
-              tracks.length > 0 ? (
-                <AudioPlayer
-                  tracks={tracks}
-                  onTrackSelect={handleTrackSelect}
-                />
+            <div className="w-full">
+              {user ? (
+                favoriteTracks.length > 0 ? (
+                  <AudioPlayer
+                    tracks={favoriteTracks}
+                    onTrackSelect={handleTrackSelect}
+                  />
+                ) : (
+                  <p>No favorite tracks found.</p>
+                )
               ) : (
-                <p>No favorite tracks found.</p>
-              )
-            ) : (
-              <p className="text-lg text-center">
-                Please log in to see your favorites
-              </p>
-            )}
+                <p className="text-lg text-center">
+                  Please log in to see your favorites
+                </p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {selectedTrack && (
-          <AudioPlayerComponent
-            selectedTrack={selectedTrack}
-            onClosePlayer={handleClosePlayer}
-          />
-        )}
+          {selectedTrack && (
+            <AudioPlayerComponent
+              selectedTrack={selectedTrack}
+              onClosePlayer={handleClosePlayer}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { addFavorite, getFavorites } from "../../../useFavoritesService";
+import {
+  addFavorite,
+  getFavorites,
+  removeFavorite,
+} from "../../../useFavoritesService";
 import { useFirebaseAuth } from "../../../useFirebaseAuth";
 
 type FavoriteButtonProps = {
@@ -13,7 +17,6 @@ type FavoriteButtonProps = {
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   itemId,
   itemType,
-  itemDetails,
 }) => {
   const { user } = useFirebaseAuth();
   const [isFavorited, setIsFavorited] = useState(false);
@@ -31,11 +34,16 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
 
   const handleFavorite = async () => {
     if (user) {
-      if (!isFavorited) {
-        // Only add the favorite if it's not already favorited
-        await addFavorite(user.uid, itemType, itemId, itemDetails);
+      if (isFavorited) {
+        // If already favorited, remove it from favorites
+        await removeFavorite(user.uid, itemType, itemId);
+        console.log("Favorite removed!");
+      } else {
+        // If not favorited, add it to favorites
+        await addFavorite(user.uid, itemType, itemId);
         console.log("Favorite added!");
       }
+      // Toggle the favorite state
       setIsFavorited(!isFavorited);
     } else {
       alert("Please log in to favorite items.");
