@@ -3,7 +3,7 @@ import AudioPlayerSidebar from "../../sidebars/AudioPlayerSidebar";
 import Header from "../../headers/Header";
 import { fetchTracks, Track } from "../../../services/mediaService"; // Adjust the import as necessary
 import AudioPlayer from "../../players/AudioPlayer";
-import SearchBar from "../../searchbars/Searchbar";
+import SearchBar from "../../searchbars/SearchBar";
 import AudioPlayerComponent from "./AudioPlayerComponent";
 
 const AudioPlayerSearch: React.FC = () => {
