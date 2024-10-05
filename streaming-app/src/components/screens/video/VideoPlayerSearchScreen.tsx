@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import VideoPlayerSidebar from "../../sidebars/VideoPlayerSidebar";
 import Header from "../../headers/Header";
-import SearchBar from "../../searchbars/Searchbar"; // Import the SearchBar component
+import SearchBar from "../../searchbars/SearchBar"; // Import the SearchBar component
 import { fetchVideos, Video } from "../../../services/mediaService"; // Adjust the import as necessary
 import { useNavigate } from "react-router-dom";
 import VideoPlayer from "../../players/VideoPlayer";
