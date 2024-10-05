@@ -1,35 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import VideoPlayerSidebar from "../../sidebars/VideoPlayerSidebar";
-import Header from "../../headers/Header"; // Import the Header component
+import Header from "../../headers/Header";
+import SearchBar from "../../searchbars/Searchbar"; // Import the SearchBar component
+import { fetchVideos, Video } from "../../../services/mediaService"; // Adjust the import as necessary
+import { useNavigate } from "react-router-dom";
+import VideoPlayer from "../../players/VideoPlayer";
 
 const VideoPlayerSearch: React.FC = () => {
-  // Manage sidebar open/close state
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-  // Function to toggle sidebar
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  return (
-    <div className="flex h-screen">
-      {/* Sidebar will handle its own open/close logic */}
-      <VideoPlayerSidebar isOpen={isSidebarOpen} />
+  const handleSearch = (searchTerm: string) => {
+    const filtered = videos.filter((video) =>
+      video.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredVideos(filtered);
+  };
 
+  // Fetch videos when the component mounts
+  useEffect(() => {
+    const loadVideos = async () => {
+      const fetchedVideos = await fetchVideos();
+      setVideos(fetchedVideos);
+      setFilteredVideos(fetchedVideos); // Initialize with all videos
+    };
+    loadVideos();
+  }, []);
+
+  // Handle video selection and navigate to video player
+  const handleVideoSelect = (video: Video) => {
+    navigate("/video/player", { state: { selectedVideo: video } });
+  };
+
+  return (
+    <div className="flex h-screen relative">
+      <VideoPlayerSidebar isOpen={isSidebarOpen} />
       <div className="flex-grow flex flex-col w-full">
-        {/* Header component at the top of the screen */}
         <Header
           title="Search"
           isOpen={isSidebarOpen}
           onToggleSidebar={toggleSidebar}
         />
 
-        {/* Main content */}
-        <div className="flex justify-center items-center flex-grow">
-          <p className="text-lg">Video Player Search</p>
+        <div className="flex justify-center flex-grow">
+          <div className="w-full lg:w-1/2 flex flex-col items-start p-4">
+            <h2 className="text-3xl font-bold my-4">Movie Collection</h2>
+            <div className="w-full">
+              <SearchBar onSearch={handleSearch} />
+
+              {/* Render filtered videos */}
+              <VideoPlayer
+                videos={filteredVideos}
+                onVideoSelect={handleVideoSelect}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default VideoPlayerSearch;
