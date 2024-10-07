@@ -39,20 +39,14 @@ Navigate to the project directory and install the required dependencies:
    
 3. **Set up Firebase:**
 Make sure you configure your Firebase project and add your credentials to the firebaseConfig.js file in the project.
-
-4. **Set up Flask Backend:**
-Navigate to the Flask server directory and install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
    
-5. **Start the Flask servers:**
+4. **Start the Flask servers:**
    ```bash
    python server_1.py
    python server_2.py
    ```
 
-6. **Run the Project:**
+5. **Run the Project:**
 Start the React development server:
    ```bash
    npm start
