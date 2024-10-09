@@ -10,12 +10,12 @@ CORS(app)
 # Metadata for movies and music
 movies_metadata = {
     "Coldplay - Viva La Vida (Official Video).mp4": {"id": "1", "name": "Coldplay - Viva La Vida (Official Video)", "genre": "Music"},
-    # "Inception.mp4": {"id": "2", "name": "Inception", "genre": "Thriller"},
+    "Y2meta.app-Aprende React ahora! curso completo para crear aplicaciones.mp4": {"id": "2", "name": "Aprende React ahora! curso completo para crear aplicaciones", "genre": "Educational"},
 }
 
 music_metadata = {
     "Deemo - Sakuzyo - Altale.mp3": {"id": "1", "name": "Altale - Deemo", "artist": "Sakuzyo", "genre": "Electronic"},
-    # "LitNon.mp3": {"id": "2", "name": "Literally Nonsense", "artist": "Eve", "genre": "J-pop"},
+    "Gusty Garden Galaxy - Super Mario Galaxy.mp3": {"id": "2", "name": "Gusty Garden Galaxy - Super Mario Galaxy", "artist": "Nintendo", "genre": "Videogames"},
 }
 
 MOVIES_FOLDER = "movies"
